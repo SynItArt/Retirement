@@ -468,7 +468,31 @@ footer{background:var(--navy);color:#4A6580;text-align:center;padding:18px;font-
       </div>
       <span class="q-lbl">가장 걱정되는 것 (선택)</span>
       <textarea id="iConcern" rows="2" placeholder="예: 소득 크레바스가 걱정됩니다 / IRP를 어떻게 해야 할지..."></textarea>
-      <button class="btn btn-p" style="background:var(--mint)" onclick="submitAll()">
+      <!-- 개인정보 동의 -->
+      <div style="background:#F0F6FF;border-radius:12px;padding:14px 16px;margin-top:16px;border:1.5px solid var(--border)">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer">
+          <input type="checkbox" id="privacyAgree" style="width:18px;height:18px;margin-top:2px;accent-color:var(--sky);flex-shrink:0">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);line-height:1.6">
+            <strong style="color:var(--red)">[필수]</strong> 개인정보 수집·이용에 동의합니다<br>
+            <span style="font-size:11px;color:var(--muted);font-weight:600">
+              · 수집항목: 성명, 연락처, 재무정보(소득·자산·연금)<br>
+              · 이용목적: 은퇴설계 상담 및 맞춤형 금융상품 안내<br>
+              · 보유기간: 상담 완료 후 3년 / 동의 철회 시 즉시 삭제
+            </span>
+          </div>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-top:10px">
+          <input type="checkbox" id="marketingAgree" style="width:18px;height:18px;margin-top:2px;accent-color:var(--sky);flex-shrink:0">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);line-height:1.6">
+            <strong style="color:var(--muted)">[선택]</strong> 마케팅 정보 수신에 동의합니다<br>
+            <span style="font-size:11px;color:var(--muted);font-weight:600">
+              · 은퇴설계 관련 유용한 정보 및 상담 안내 수신
+            </span>
+          </div>
+        </label>
+      </div>
+
+      <button class="btn btn-p" style="background:var(--mint);margin-top:12px" onclick="submitAll()">
         📊 내 은퇴 진단 결과 보기 →
       </button>
       <button class="btn btn-s" onclick="goPrev(3)">← 이전</button>
@@ -693,9 +717,11 @@ footer{background:var(--navy);color:#4A6580;text-align:center;padding:18px;font-
 </section>
 
 <footer>
-  본 진단은 FP 상담 참고용이며 실제 투자 결과와 다를 수 있습니다<br>
-  데이터 출처: 통계청 KOSIS API · 국민연금공단 · 금융감독원 finlife · 보험개발원 KIDI<br>
-  AFPK 신대식 FP 전용 시스템
+  본 진단은 <strong style="color:#7B9CC0">투자자문이 아닌 참고용</strong>이며 실제 투자 결과와 다를 수 있습니다<br>
+  금융상품 가입 전 반드시 상품설명서를 확인하시고 본인의 투자성향에 맞는 상품을 선택하세요<br>
+  보험계약 체결 전 상품설명서·약관을 반드시 읽어보시기 바랍니다<br>
+  투자권유대행인 신대식 (합격등록번호: 24-015461) · 퇴직연금모집인 등록번호 제L24122600078호 · 한국재무설계(주) 법인지원본부<br>
+  <span style="color:#3A5068">데이터 출처: 통계청 KOSIS API · 국민연금공단 · 금융감독원 finlife · 보험개발원 KIDI</span>
 </footer>
 
 <script>
@@ -970,6 +996,16 @@ function submitAll() {
   D.concern = document.getElementById("iConcern").value.trim();
   if (!D.risk){alert("투자 성향을 선택해주세요");return;}
   if (D.childCost===""){alert("자녀 비용을 선택해주세요");return;}
+
+  // 개인정보 동의 필수 체크
+  if (!document.getElementById("privacyAgree").checked) {
+    document.getElementById("privacyAgree").closest("div").style.border = "1.5px solid var(--red)";
+    showToast("📋 개인정보 수집·이용 동의가 필요합니다!");
+    document.getElementById("privacyAgree").scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+  // 마케팅 동의 여부 저장
+  D.marketingAgree = document.getElementById("marketingAgree")?.checked || false;
 
   onFormComplete();
   setupResultObserver();
