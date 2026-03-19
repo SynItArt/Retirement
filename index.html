@@ -392,7 +392,7 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
 
       <button class="btn-submit" id="btnSubmit" onclick="submitConsult()" disabled
         style="opacity:.5;cursor:not-allowed">
-        📋 상담 신청 완료하기
+        📋 세부 상담 신청하기 →
       </button>
     </div>
 
@@ -710,12 +710,23 @@ function submitConsult() {
   form.appendChild(inp); document.body.appendChild(form); form.submit();
   setTimeout(()=>form.remove(), 3000);
 
-  // 완료 화면
-  document.getElementById('s4').style.display = 'block';
-  document.getElementById('done-sub').innerHTML =
-    `<strong>${name}</strong>님의 상담 신청이 완료되었습니다.<br>AFPK 신대식 FP가 빠른 시간 내에 연락드립니다 😊`;
+  // detail.html로 이동 (URL 파라미터로 입력값 전달)
+  const params = new URLSearchParams({
+    name, phone, email,
+    age:    D.age,
+    income: D.income,
+    target: D.target,
+    gender: D.gender,
+    gap:    C.gap      || '',
+    crev:   C.crevYears || 0,
+    pension: C.estPension || 0,
+    ontrack: C.onTrack ? '1' : '0',
+    depAge: C.depAge   || '',
+  });
   setProg(100);
-  setTimeout(()=>scrollTo({top:document.getElementById('s4').offsetTop,behavior:'smooth'}),300);
+  setTimeout(() => {
+    window.location.href = 'detail.html?' + params.toString();
+  }, 500);
 }
 </script>
 </body>
