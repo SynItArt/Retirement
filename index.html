@@ -688,27 +688,10 @@ function submitConsult() {
   if (!phone && !email){ showToast('전화번호 또는 이메일을 입력해주세요!','#D35400'); return; }
   if (!document.getElementById('pvAgree').checked) { showToast('개인정보 동의가 필요합니다!','#D35400'); return; }
 
-  const payload = {
-    action:'save_client', timestamp:new Date().toLocaleString('ko-KR'),
-    name, phone, email,
-    age:D.age, gender:D.gender, income:D.income, target:D.target,
-    estPension:C.estPension, totalPension:C.totalPension,
-    gap:C.gap, crevYears:C.crevYears, onTrack:C.onTrack, depAge:C.depAge||'소진없음',
-    privacyAgree:true, marketingAgree:document.getElementById('mktAgree').checked,
-    source:'간이진단_고객직접입력'
-  };
+  // URL 파라미터 전달용 (시트 저장은 detail.html에서)
 
-  // iframe POST
-  const old = document.getElementById('_sif'); if(old) old.remove();
-  const iframe = document.createElement('iframe');
-  iframe.id='_sif'; iframe.name='_sif'; iframe.style.display='none';
-  document.body.appendChild(iframe);
-  const form = document.createElement('form');
-  form.method='POST'; form.action=SHEET_URL; form.target='_sif'; form.style.display='none';
-  const inp = document.createElement('input');
-  inp.type='hidden'; inp.name='data'; inp.value=JSON.stringify(payload);
-  form.appendChild(inp); document.body.appendChild(form); form.submit();
-  setTimeout(()=>form.remove(), 3000);
+  // ※ Google Sheets 저장은 detail.html에서 전체 데이터와 함께 처리
+  //    v2에서는 URL 파라미터로 데이터 전달만 함
 
   // detail.html로 이동 (URL 파라미터로 입력값 전달)
   const params = new URLSearchParams({
