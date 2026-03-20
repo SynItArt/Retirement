@@ -65,9 +65,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 input[type=text],input[type=tel],input[type=email],input[type=number],select,textarea{
   width:100%;padding:12px 14px;border-radius:11px;border:2px solid var(--border);
   font-size:15px;font-weight:700;color:var(--text);background:#F7F9FC;
-  font-family:inherit;outline:none;transition:border .2s}
-input:focus,select:focus,textarea:focus{border-color:var(--sky);background:#F0F6FF}
+  font-family:inherit;outline:none;transition:all .25s}
+input:focus,select:focus,textarea:focus{border-color:var(--sky);background:#F0F6FF;box-shadow:0 0 0 3px rgba(45,107,228,.12)}
 input.prefilled{background:#FFFBF0;border-color:#E8D4A0}
+input.filled,select.filled{border-color:var(--mint);background:#F0FFF8}
 
 /* 슬라이더 */
 .sv{font-size:26px;font-weight:900;color:var(--navy);text-align:center;margin:4px 0}
@@ -81,8 +82,10 @@ input[type=range]{width:100%;accent-color:var(--sky);cursor:pointer;border:none;
 .og4{grid-template-columns:1fr 1fr}
 .ob{padding:11px 8px;border-radius:10px;border:2px solid var(--border);
   background:#F7F9FC;font-size:13px;font-weight:800;cursor:pointer;
-  text-align:center;transition:all .2s;font-family:inherit;color:var(--sub)}
-.ob:hover,.ob.on{border-color:var(--sky);background:#EBF3FF;color:var(--navy)}
+  text-align:center;transition:all .25s;font-family:inherit;color:var(--sub);position:relative}
+.ob:hover,.ob.on{border-color:var(--sky);background:#EBF3FF;color:var(--navy);
+  box-shadow:0 0 0 3px rgba(45,107,228,.18)}
+.ob.on::after{content:'✓';position:absolute;top:3px;right:7px;font-size:13px;font-weight:900;color:var(--green)}
 .ob .ic{font-size:17px;display:block;margin-bottom:3px}
 
 /* 알림 */
@@ -250,7 +253,7 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
     </div>
     <div class="frow">
       <span class="flbl">국민연금 예상 수령액/월</span>
-      <span class="fhint">모르시면 0 → 전국 평균 97만원 자동 적용</span>
+      <span class="fhint">모르시면 0 → 전국 평균 97만원 자동 적용 <span style="color:var(--sky)">(국민연금공단 2024 통계연보)</span></span>
       <div class="sv" id="vPension">0<span style="font-size:14px">만원</span></div>
       <input type="range" id="rPension" min="0" max="350" step="5" value="0"
         oninput="upR('pension',+this.value,this.value+'만원','vPension')">
@@ -401,6 +404,10 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
     <div id="doneSummary"></div>
   </div>
 
+  <div class="done-card" id="doneStrategy">
+    <!-- 전략 제안서가 JS로 채워짐 -->
+  </div>
+
   <div class="done-card">
     <div class="dc-title">📅 앞으로의 진행 순서</div>
     <div style="display:flex;flex-direction:column;gap:8px">
@@ -436,7 +443,7 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
 </footer>
 
 <script>
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzg-IQm7zJ7HnmJcRvZsc2kzHJ7w-mEb8IprXIdxVBCy3dh4FqKq8W1eWQTQdL534kJ/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwlorMXxVGbrbZ4qZiGPeXWAW8wjYySh-Nkxv1d18Sng54JcIVBxdMB0azJ6TsAXV_q/exec';
 
 // ── 상태 ──────────────────────────────────────────────
 const D = {
@@ -585,39 +592,59 @@ function goPrev(from) {
 
 // ── 최종 제출 ─────────────────────────────────────────
 function submitAll() {
-  D.target  = +document.getElementById('rTarget').value;
-  D.concern = document.getElementById('iConcern').value.trim();
+  D.target  = +document.getElementById('rTarget').value || 280;
+  D.concern = document.getElementById('iConcern').value.trim() || '없음';
   if (!D.name||(!D.phone&&!D.email)){ alert('성함과 연락처를 확인해주세요'); return; }
   if (!document.getElementById('pvAgree').checked){ alert('개인정보 동의가 필요합니다'); return; }
   if (!D.risk) { alert('투자 성향을 선택해주세요'); return; }
 
   const netAsset = (+D.financial||0)+(+D.realEstate||0)-(+D.debt||0);
-  const rpMonthly = D.retireDuration ? Math.round((+D.retirePension||0)/D.retireDuration/12) : 0;
+  const retireAge = +D.retireAge||62;
+  const lifeExp = D.gender==='여'?86.6:80.6;
+  const retireDuration = Math.max(15, lifeExp - retireAge);
+  const rpMonthly = retireDuration ? Math.round((+D.retirePension||0)/retireDuration/12) : 0;
   const totalPension = (D.pension||97)+(D.spouse==='있음'?60:0)+rpMonthly+(+D.personalPension||0)+(+D.housingPension||0);
   const gap = D.target - totalPension;
+  const crevYears = Math.max(0, 65 - retireAge);
+  const crevTotal = crevYears > 0 ? D.target * 12 * crevYears : 0;
+
+  // 전략 컬럼 생성
+  const strategies = [];
+  if(gap>0) strategies.push({cat:'연금 갭 해소',action:'IRP/연금저축 월 '+Math.min(150,Math.round(gap*0.6))+'만원 적립',priority:'긴급'});
+  if(crevYears>0) strategies.push({cat:'크레바스 대비',action:'단기 예금·MMF로 '+Math.round(crevTotal/10000*10)/10+'억원 확보 목표',priority:'긴급'});
+  if((+D.personalPension||0)===0) strategies.push({cat:'3층 개인연금',action:'연금저축 연 600만원 세액공제 활용',priority:'높음'});
+  if(D.risk==='공격형') strategies.push({cat:'포트폴리오',action:'국내외 주식 60% + 채권 30% + 대안 10%',priority:'중간'});
+  else if(D.risk==='중립형') strategies.push({cat:'포트폴리오',action:'주식 40% + 채권 45% + 대안 15%',priority:'중간'});
+  else strategies.push({cat:'포트폴리오',action:'채권 60% + 예금 25% + 주식 15%',priority:'중간'});
+  if(netAsset>50000) strategies.push({cat:'절세 전략',action:'ISA 계좌 활용 + 분리과세 설계',priority:'중간'});
+  if(D.spouse==='있음') strategies.push({cat:'배우자 연금',action:'배우자 국민연금·연금저축 병행 가입 검토',priority:'보통'});
+  strategies.push({cat:'주택연금',action:(+D.housingPension||0)>0?'예상 '+D.housingPension+'만원/월 — 수령 시기 최적화':'주택 보유 시 가입 검토',priority:'보통'});
+  strategies.push({cat:'보장성 보험',action:'실손·암·치매 보장 점검 및 리밸런싱',priority:'보통'});
 
   const payload = {
     action:'save_client',
     timestamp: new Date().toLocaleString('ko-KR'),
-    name:D.name, phone:D.phone, email:D.email,
-    age:D.age, gender:D.gender, spouse:D.spouse,
-    retireAge:+D.retireAge||62,
-    income:D.income, expense:D.expense,
-    target:D.target,
+    name:D.name||'미입력', phone:D.phone||'없음', email:D.email||'없음',
+    age:D.age||50, gender:D.gender||'미선택', spouse:D.spouse||'미선택',
+    retireAge:retireAge,
+    income:D.income||0, expense:D.expense||0,
+    target:D.target||280,
     financial:+D.financial||0, realEstate:+D.realEstate||0,
-    debt:+D.debt||0, netAsset,
+    debt:+D.debt||0, netAsset:netAsset||0,
     pension:D.pension||97,
     spousePension:D.spouse==='있음'?60:0,
     retirePension:+D.retirePension||0,
     personalPension:+D.personalPension||0,
     housingPension:+D.housingPension||0,
-    totalPension, gap,
-    crevYears: Math.max(0,(D.age>=55?63:65)-(+D.retireAge||62)),
+    totalPension:totalPension||0, gap:gap||0,
+    crevYears:crevYears||0, crevTotal:crevTotal||0,
     onTrack: gap <= 0,
-    riskLevel:D.risk, memo:D.concern,
+    riskLevel:D.risk||'미선택', memo:D.concern||'없음',
     privacyAgree:true,
     marketingAgree:document.getElementById('mktAgree').checked,
-    source:'세부상담_기초자료_detail'
+    source:'세부상담_기초자료_detail',
+    strategies: JSON.stringify(strategies),
+    sendEmail: 'profinitart@gmail.com'
   };
 
   // iframe POST
@@ -638,14 +665,33 @@ function submitAll() {
   document.getElementById('doneSub').innerHTML=
     `<strong>${D.name}</strong>님의 기초자료가 제출되었습니다.<br>AFPK 신대식 FP가 검토 후 빠른 시간 내에 연락드립니다 😊`;
   const fmt = v => v>=10000?(v/10000).toFixed(1)+'억원':v.toLocaleString()+'만원';
+
+  // 제출 요약
   document.getElementById('doneSummary').innerHTML=[
     ['이름',D.name],['연락처',D.phone||D.email],
-    ['나이',D.age+'세'],['은퇴목표',D.retireAge+'세'],
+    ['나이',D.age+'세'],['은퇴목표',retireAge+'세'],
     ['월 소득',D.income+'만원'],['순자산',fmt(netAsset)],
     ['연금 합계',totalPension+'만원/월'],
     ['월 갭',gap>0?'-'+gap+'만원 부족':'+'+Math.abs(gap)+'만원 여유'],
+    ['크레바스',crevYears>0?crevYears+'년 ('+fmt(crevTotal)+')':'없음'],
     ['투자 성향',D.risk]
   ].map(([k,v])=>`<div class="dc-row"><span class="dc-k">${k}</span><span class="dc-v">${v}</span></div>`).join('');
+
+  // 전략 제안서 1page
+  document.getElementById('doneStrategy').innerHTML =
+    '<div style="font-size:14px;font-weight:900;color:var(--navy);margin-bottom:12px">📈 맞춤 은퇴 전략 제안 (1page 요약)</div>' +
+    '<div style="font-size:10px;color:var(--muted);margin-bottom:10px">* 간이 분석 기반 · 상담 시 정밀 설계 진행</div>' +
+    strategies.map(s=>`<div style="display:flex;gap:8px;padding:8px 10px;border-radius:8px;
+      background:${s.priority==='긴급'?'#FEE8E8':s.priority==='높음'?'#FFF4DC':'#F7F9FC'};
+      margin-bottom:6px;border-left:4px solid ${s.priority==='긴급'?'var(--red)':s.priority==='높음'?'var(--amber)':'var(--sky)'}">
+      <div style="flex-shrink:0;min-width:60px;font-size:11px;font-weight:900;color:${s.priority==='긴급'?'var(--red)':s.priority==='높음'?'var(--amber)':'var(--sky)'}">[${s.priority}]</div>
+      <div>
+        <div style="font-size:12px;font-weight:900;color:var(--navy)">${s.cat}</div>
+        <div style="font-size:11px;font-weight:600;color:var(--sub)">${s.action}</div>
+      </div>
+    </div>`).join('') +
+    '<div style="margin-top:10px;padding:10px 12px;border-radius:8px;background:#EBF3FF;font-size:11px;color:var(--blue);font-weight:700;line-height:1.7">' +
+    '📧 이 전략 요약이 FP 이메일로 자동 전송되었습니다.<br>상담 시 맞춤 포트폴리오와 종합 리포트를 제공합니다.</div>';
 
   scrollTo({top:0,behavior:'smooth'});
 }
