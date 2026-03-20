@@ -621,10 +621,13 @@ function submitAll() {
   strategies.push({cat:'주택연금',action:(+D.housingPension||0)>0?'예상 '+D.housingPension+'만원/월 — 수령 시기 최적화':'주택 보유 시 가입 검토',priority:'보통'});
   strategies.push({cat:'보장성 보험',action:'실손·암·치매 보장 점검 및 리밸런싱',priority:'보통'});
 
+  const consultDateTime = new URLSearchParams(window.location.search).get('consultDateTime') || '미지정';
+
   const payload = {
     action:'save_client',
     timestamp: new Date().toLocaleString('ko-KR'),
     name:D.name||'미입력', phone:D.phone||'없음', email:D.email||'없음',
+    consultDateTime: consultDateTime,
     age:D.age||50, gender:D.gender||'미선택', spouse:D.spouse||'미선택',
     retireAge:retireAge,
     income:D.income||0, expense:D.expense||0,

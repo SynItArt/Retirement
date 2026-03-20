@@ -408,6 +408,42 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
         <div class="cf-status" id="cf-status"></div>
       </div>
 
+      <!-- 상담 희망 일시 -->
+      <div>
+        <span class="cf-lbl">상담 희망 일시 <span style="color:#FFD740">(선택)</span></span>
+        <input class="cf-inp" type="date" id="cDate" min="" style="margin-bottom:6px"
+          onchange="checkReady()">
+        <select class="cf-inp" id="cTime" style="color:#fff;background:rgba(255,255,255,.07);
+          border:2px solid rgba(255,255,255,.12);font-weight:700" onchange="checkReady()">
+          <option value="" style="color:#000">시간 선택 (30분 단위)</option>
+          <option value="08:00" style="color:#000">오전 08:00</option>
+          <option value="08:30" style="color:#000">오전 08:30</option>
+          <option value="09:00" style="color:#000">오전 09:00</option>
+          <option value="09:30" style="color:#000">오전 09:30</option>
+          <option value="10:00" style="color:#000">오전 10:00</option>
+          <option value="10:30" style="color:#000">오전 10:30</option>
+          <option value="11:00" style="color:#000">오전 11:00</option>
+          <option value="11:30" style="color:#000">오전 11:30</option>
+          <option value="12:00" style="color:#000">낮 12:00</option>
+          <option value="12:30" style="color:#000">낮 12:30</option>
+          <option value="13:00" style="color:#000">오후 01:00</option>
+          <option value="13:30" style="color:#000">오후 01:30</option>
+          <option value="14:00" style="color:#000">오후 02:00</option>
+          <option value="14:30" style="color:#000">오후 02:30</option>
+          <option value="15:00" style="color:#000">오후 03:00</option>
+          <option value="15:30" style="color:#000">오후 03:30</option>
+          <option value="16:00" style="color:#000">오후 04:00</option>
+          <option value="16:30" style="color:#000">오후 04:30</option>
+          <option value="17:00" style="color:#000">오후 05:00</option>
+          <option value="17:30" style="color:#000">오후 05:30</option>
+          <option value="18:00" style="color:#000">오후 06:00</option>
+          <option value="18:30" style="color:#000">오후 06:30</option>
+          <option value="19:00" style="color:#000">오후 07:00</option>
+          <option value="19:30" style="color:#000">오후 07:30</option>
+          <option value="20:00" style="color:#000">오후 08:00</option>
+        </select>
+      </div>
+
       <!-- 개인정보 동의 -->
       <div class="privacy-box">
         <label class="pv-row">
@@ -725,17 +761,27 @@ function submitConsult() {
   if (!document.getElementById('pvAgree').checked) { showToast('개인정보 동의가 필요합니다!','#D35400'); return; }
 
   // Google Sheets 저장 (iframe POST — CORS 우회)
+  const consultDate = document.getElementById('cDate').value || '';
+  const consultTime = document.getElementById('cTime').value || '';
+  const consultDateTime = consultDate && consultTime ? consultDate + ' ' + consultTime : (consultDate || '미지정');
+
   const payload = {
     action:'save_client', timestamp:new Date().toLocaleString('ko-KR'),
     name: name||'미입력', phone: phone||'없음', email: email||'없음',
-    age: D.age||50, gender: D.gender||'미선택', income: D.income||0, target: D.target||0,
-    estPension: C.estPension||0, totalPension: C.totalPension||0,
-    gap: C.gap||0, crevYears: C.crevYears||0,
+    consultDateTime: consultDateTime,
+    age: D.age||50, gender: D.gender||'미선택',
+    spouse:'', retireAge:0, income: D.income||0, expense:0, target: D.target||0,
+    financial:0, realEstate:0, debt:0, netAsset:0,
+    pension: C.estPension||0, spousePension:0, retirePension:0, personalPension:0, housingPension:0,
+    totalPension: C.totalPension||0,
+    gap: C.gap||0, crevYears: C.crevYears||0, crevTotal:0,
     onTrack: C.onTrack!==undefined?C.onTrack:false,
     depAge: C.depAge||'소진없음',
+    riskLevel:'', memo:'',
     privacyAgree: true,
     marketingAgree: document.getElementById('mktAgree').checked,
-    source: '간이진단_고객직접입력'
+    source: '간이진단_고객직접입력',
+    sendEmail: 'profinitart@gmail.com'
   };
 
   const old = document.getElementById('_sif'); if(old) old.remove();
@@ -754,6 +800,7 @@ function submitConsult() {
   // detail.html로 이동 (URL 파라미터로 입력값 전달)
   const params = new URLSearchParams({
     name, phone, email,
+    consultDateTime: consultDateTime,
     age:    D.age||50,
     income: D.income||0,
     target: D.target||0,
@@ -780,6 +827,9 @@ function submitConsult() {
     const v = base + Math.floor(Math.random()*3) - 1;
     el.textContent = Math.max(1, v);
   }, 15000);
+  // 날짜 min을 오늘로 설정
+  const dateEl = document.getElementById('cDate');
+  if(dateEl) dateEl.min = new Date().toISOString().split('T')[0];
 })();
 </script>
 </body>
