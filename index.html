@@ -722,6 +722,7 @@ function submitConsult() {
 
   const payload = {
     action:'save_client', timestamp:new Date().toLocaleString('ko-KR'),
+    secretKey: 'b8b7190746adc6c981b2b30fd9e83481',
     name: str(name), phone: str(phone) || '없음', email: str(email) || '없음',
     consultDateTime: str(consultDateTime),
     age: num(D.age), gender: str(D.gender) || '미선택',
