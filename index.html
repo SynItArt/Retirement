@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>내 은퇴자산, 괜찮아요? — AFPK 신대식</title>
+<title>은퇴 후, 괜찮으실까요? — AFPK 신대식</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
@@ -238,6 +238,32 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
     </div>
 
     <h1 class="hero-title">은퇴 후,<br><em>괜찮으실까요?</em></h1>
+
+    <!-- 3층 연금 구조 일러스트 -->
+    <div style="margin:0 auto 16px;max-width:280px">
+      <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#0F2744"/><stop offset="100%" stop-color="#1A3A70"/></linearGradient>
+          <linearGradient id="g2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#1A3A70"/><stop offset="100%" stop-color="#2D6BE4"/></linearGradient>
+          <linearGradient id="g3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#D89520"/><stop offset="100%" stop-color="#F5A623"/></linearGradient>
+        </defs>
+        <!-- 1층 국민연금 -->
+        <rect x="30" y="108" width="220" height="40" rx="6" fill="url(#g1)" opacity=".9"/>
+        <text x="140" y="132" text-anchor="middle" fill="#7B9CC0" font-size="12" font-weight="700" font-family="'Noto Sans KR',sans-serif">1층 국민연금</text>
+        <!-- 2층 퇴직연금 -->
+        <rect x="50" y="64" width="180" height="40" rx="6" fill="url(#g2)" opacity=".9"/>
+        <text x="140" y="88" text-anchor="middle" fill="#94B4D4" font-size="12" font-weight="700" font-family="'Noto Sans KR',sans-serif">2층 퇴직연금</text>
+        <!-- 3층 개인연금 -->
+        <rect x="70" y="20" width="140" height="40" rx="6" fill="url(#g3)" opacity=".9"/>
+        <text x="140" y="44" text-anchor="middle" fill="#0B1D35" font-size="12" font-weight="900" font-family="'Noto Sans KR',sans-serif">3층 개인연금</text>
+        <!-- 갭 표시 화살표 -->
+        <line x1="260" y1="24" x2="260" y2="144" stroke="#C0392B" stroke-width="2" stroke-dasharray="4 3" opacity=".7"/>
+        <text x="264" y="88" fill="#FF8A80" font-size="10" font-weight="900" font-family="'Noto Sans KR',sans-serif" transform="rotate(90,264,88)">GAP</text>
+        <!-- 보호 우산 아이콘 -->
+        <path d="M140 8 Q140 2 148 2 Q156 2 156 8 Q156 2 164 2 Q172 2 172 8 Q172 2 180 2 Q186 2 186 8 L186 14 Q186 16 184 16 L96 16 Q94 16 94 14 L94 8 Q94 2 100 2 Q108 2 108 8 Q108 2 116 2 Q124 2 124 8 Q124 2 132 2 Q140 2 140 8Z" fill="#F5A623" opacity=".3"/>
+      </svg>
+    </div>
+
     <p class="hero-sub">1분이면 내 연금, 지금 바로 확인할 수 있습니다</p>
     <p class="hero-safe">개인정보 입력 없이, 슬라이더만 움직이면 됩니다</p>
 
@@ -347,23 +373,47 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
       </p>
       <div class="bridge-steps">
         <div class="bs-item">
-          <div class="bs-num">1</div>
+          <div style="flex-shrink:0;width:44px;height:44px">
+            <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" width="44" height="44">
+              <circle cx="22" cy="22" r="20" fill="#EBF3FF" stroke="#2D6BE4" stroke-width="1.5"/>
+              <circle cx="20" cy="18" r="8" fill="none" stroke="#2D6BE4" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="26" y1="24" x2="32" y2="30" stroke="#2D6BE4" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="bs-text"><strong>연금 현황 정확히 파악</strong><br>국민연금 예상액, 퇴직연금 적립액, 개인연금 유무 확인</div>
         </div>
         <div class="bs-item">
-          <div class="bs-num">2</div>
+          <div style="flex-shrink:0;width:44px;height:44px">
+            <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" width="44" height="44">
+              <circle cx="22" cy="22" r="20" fill="#FFF8E7" stroke="#F5A623" stroke-width="1.5"/>
+              <rect x="12" y="24" width="9" height="9" rx="2" fill="#F5A623" opacity=".7"/>
+              <rect x="23" y="24" width="9" height="9" rx="2" fill="#F5A623" opacity=".7"/>
+              <rect x="12" y="13" width="9" height="9" rx="2" fill="#F5A623" opacity=".7"/>
+              <rect x="23" y="13" width="9" height="9" rx="2" fill="#F5A623" opacity=".35" stroke="#F5A623" stroke-width="1" stroke-dasharray="2 2"/>
+            </svg>
+          </div>
           <div class="bs-text"><strong>빈 곳 채우기</strong><br>부족한 부분을 어떤 방법으로 채울 수 있는지 정리</div>
         </div>
         <div class="bs-item">
-          <div class="bs-num">3</div>
+          <div style="flex-shrink:0;width:44px;height:44px">
+            <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" width="44" height="44">
+              <circle cx="22" cy="22" r="20" fill="#EEFAF4" stroke="#016B49" stroke-width="1.5"/>
+              <circle cx="22" cy="22" r="8" fill="none" stroke="#016B49" stroke-width="2"/>
+              <circle cx="22" cy="22" r="3" fill="#016B49"/>
+              <line x1="22" y1="10" x2="22" y2="14" stroke="#016B49" stroke-width="2" stroke-linecap="round"/>
+              <line x1="22" y1="30" x2="22" y2="34" stroke="#016B49" stroke-width="2" stroke-linecap="round"/>
+              <line x1="10" y1="22" x2="14" y2="22" stroke="#016B49" stroke-width="2" stroke-linecap="round"/>
+              <line x1="30" y1="22" x2="34" y2="22" stroke="#016B49" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="bs-text"><strong>운용 방법 최적화</strong><br>이미 가입된 연금의 수익률과 운용 방법 점검</div>
         </div>
       </div>
       <button class="btn-go" onclick="goToConsult()" style="font-size:17px;padding:17px">
-        세부상담 필요
+        정리해보기
       </button>
       <div style="font-size:12px;color:var(--muted);margin-top:10px;font-weight:600">
-        혼자 하기 쉽지 않습니다. 세부상담 필요해요
+        혼자 하기 어려우시면, 같이 정리해 드리겠습니다
       </div>
     </div>
   </div>
@@ -373,9 +423,20 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
 <section id="s3">
   <div class="consult-wrap">
     <div class="consult-title">더 정확한 결과를 받아보시겠습니까?</div>
+
+    <!-- 신뢰 아이콘 -->
+    <div style="margin:0 auto 12px;width:56px;height:56px">
+      <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
+        <path d="M28 4 L48 14 L48 28 Q48 44 28 52 Q8 44 8 28 L8 14 Z" fill="rgba(45,107,228,.15)" stroke="rgba(45,107,228,.4)" stroke-width="1.5"/>
+        <rect x="21" y="24" width="14" height="12" rx="3" fill="none" stroke="#7B9CC0" stroke-width="2"/>
+        <path d="M24 24 L24 20 Q24 16 28 16 Q32 16 32 20 L32 24" fill="none" stroke="#7B9CC0" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="28" cy="30" r="2" fill="#7B9CC0"/>
+      </svg>
+    </div>
+
     <div class="consult-safe">
-      24시간 이내 연락드릴게요<br>
-      희망하신 방법으로, 희망하신 시간대에만 연락드립니다.
+      원치 않는 연락은 드리지 않습니다.<br>
+      희망하신 방법으로, 희망하신 시간에만 연락드립니다.
     </div>
 
     <div class="mini-result" id="mini-result"></div>
@@ -430,7 +491,7 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
 
       <button class="btn-submit" id="btnSubmit" onclick="submitConsult()" disabled
         style="opacity:.4;cursor:not-allowed">
-        같이 정리하기
+        정리해보기
       </button>
     </div>
 
@@ -444,9 +505,10 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
       <div class="fp-tag-wrap">
         <span class="ft">AFPK 재무설계사</span>
         <span class="ft">퇴직연금 전문</span>
-        <span class="ft">AI 데이터 분석</span>        
+        <span class="ft">AI 데이터 분석</span>
+        <span class="ft">의용소방대원</span>
       </div>
-      <div class="fp-msg">"은퇴 후 ... 혼자 고민하지 마세요. 같이 정리해드립니다."</div>
+      <div class="fp-msg">"연금, 혼자 고민하지 마세요. 같이 정리합니다."</div>
       <div style="margin-top:14px;padding:14px 16px;border-radius:10px;
         background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
         <div style="font-size:13px;font-weight:900;color:#6BA3E8;margin-bottom:6px">AFPK란?</div>
@@ -461,24 +523,93 @@ footer{background:var(--navy);color:#3A5068;text-align:center;
   </div>
 </section>
 
-<!-- ═══ S4 — 완료 ═══ -->
+<!-- ═══ S4 — 완료 (3단계 퍼널) ═══ -->
 <section id="s4">
-  <div class="inner" style="max-width:560px;text-align:center">
-    <div class="done-icon">&#10003;</div>
-    <div class="done-title">접수되었습니다</div>
-    <div class="done-sub" id="done-sub">더 정확한 진단을 위해 몇 가지만 더 여쭤볼게요</div>
-    <div class="done-next">
-      <div class="dn-title">앞으로의 진행</div>
-      <div class="dn-step"><div class="dn-num">1</div><div class="dn-text"><strong>연금 현황 상세 입력</strong><br>국민연금·퇴직연금·개인연금 실제 금액 입력</div></div>
-      <div class="dn-step"><div class="dn-num">2</div><div class="dn-text"><strong>정확한 갭 분석</strong><br>추정이 아닌 실제 수치 기반 진단</div></div>
-      <div class="dn-step"><div class="dn-num">3</div><div class="dn-text"><strong>같이 정리</strong><br>희망하신 방법으로 연락드립니다</div></div>
+  <div class="inner" style="max-width:560px">
+
+    <!-- Tier 1: 접수 완료 -->
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="margin:0 auto 12px;width:72px;height:72px">
+        <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" width="72" height="72">
+          <circle cx="36" cy="36" r="34" fill="#E5F7F0" stroke="#016B49" stroke-width="2"/>
+          <path d="M20 36 L30 46 L52 24" fill="none" stroke="#016B49" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="done-title">접수되었습니다</div>
+      <div class="done-sub">희망하신 방법으로 연락드리겠습니다</div>
     </div>
+
+    <div class="done-next" style="margin-bottom:20px">
+      <div class="dn-title">앞으로의 진행</div>
+      <div class="dn-step"><div class="dn-num">1</div><div class="dn-text"><strong>접수 확인</strong><br>AFPK 신대식이 접수 내용을 확인합니다</div></div>
+      <div class="dn-step"><div class="dn-num">2</div><div class="dn-text"><strong>연락</strong><br>희망하신 방법·시간에 연락드립니다</div></div>
+      <div class="dn-step"><div class="dn-num">3</div><div class="dn-text"><strong>같이 정리</strong><br>연금 현황을 함께 파악하고 정리합니다</div></div>
+    </div>
+
+    <!-- Tier 2: 선택형 추가 질문 -->
+    <div style="background:linear-gradient(135deg,#f8fbff,#eef5ff);border:1.5px solid var(--sky);
+      border-radius:16px;padding:24px 22px;margin-bottom:20px">
+      <div style="font-size:15px;font-weight:900;color:var(--navy);margin-bottom:4px">
+        시간이 되시면, 아래만 더 알려주세요
+      </div>
+      <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:16px">
+        선택사항입니다. 알려주시면 더 정확한 준비가 가능합니다.
+      </div>
+
+      <div style="margin-bottom:14px">
+        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px">국민연금 예상 수령액을 아시나요?</div>
+        <div class="radio-group" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div class="radio-opt"><input type="radio" name="q_pension" id="qp1" value="모름"><label for="qp1"><span class="check">&#10003; </span>모름</label></div>
+          <div class="radio-opt"><input type="radio" name="q_pension" id="qp2" value="50만원이하"><label for="qp2"><span class="check">&#10003; </span>50만 이하</label></div>
+          <div class="radio-opt"><input type="radio" name="q_pension" id="qp3" value="50만원이상"><label for="qp3"><span class="check">&#10003; </span>50만 이상</label></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px">
+        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px">퇴직연금(IRP 포함)이 있으신가요?</div>
+        <div class="radio-group" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div class="radio-opt"><input type="radio" name="q_retire" id="qr1" value="없음"><label for="qr1"><span class="check">&#10003; </span>없음</label></div>
+          <div class="radio-opt"><input type="radio" name="q_retire" id="qr2" value="있음"><label for="qr2"><span class="check">&#10003; </span>있음</label></div>
+          <div class="radio-opt"><input type="radio" name="q_retire" id="qr3" value="모름"><label for="qr3"><span class="check">&#10003; </span>모름</label></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px">투자 성향은?</div>
+        <div class="radio-group" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div class="radio-opt"><input type="radio" name="q_risk" id="qk1" value="안정형"><label for="qk1"><span class="check">&#10003; </span>안정형</label></div>
+          <div class="radio-opt"><input type="radio" name="q_risk" id="qk2" value="중립형"><label for="qk2"><span class="check">&#10003; </span>중립형</label></div>
+          <div class="radio-opt"><input type="radio" name="q_risk" id="qk3" value="공격형"><label for="qk3"><span class="check">&#10003; </span>공격형</label></div>
+        </div>
+      </div>
+
+      <button onclick="submitExtra()" style="width:100%;padding:14px;border-radius:12px;border:none;
+        background:var(--sky);color:#fff;font-size:15px;font-weight:900;cursor:pointer;
+        font-family:inherit;transition:all .2s" id="btnExtra">추가 정보 전송</button>
+      <div id="extraStatus" style="font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-top:6px;min-height:18px"></div>
+    </div>
+
+    <!-- Tier 3: detail.html 안내 -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;
+      padding:20px 22px;text-align:center">
+      <div style="font-size:14px;font-weight:800;color:var(--navy);margin-bottom:6px">
+        더 자세한 연금 현황을 입력하시겠어요?
+      </div>
+      <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:14px">
+        자산·부채·연금 상세 금액까지 입력하시면,<br>
+        더 정밀한 분석이 가능합니다.
+      </div>
+      <button onclick="goToDetail()" style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--navy);
+        background:transparent;color:var(--navy);font-size:15px;font-weight:900;cursor:pointer;
+        font-family:inherit;transition:all .2s">연금 현황 상세 입력 →</button>
+    </div>
+
   </div>
 </section>
 
 <footer>
   본 진단은 투자자문이 아닌 참고용이며 실제 결과와 다를 수 있습니다<br>
-  AFPK, 투자권유대행인 (합격등록번호: 24-015461) · 퇴직연금모집인 등록번호 제L24122600078호<br>  
+  투자권유대행인 신대식 (합격등록번호: 24-015461) · 퇴직연금모집인 등록번호 제L24122600078호<br>
 </footer>
 
 <script>
@@ -687,17 +818,64 @@ function submitConsult(){
   form.appendChild(inp);document.body.appendChild(form);form.submit();
   setTimeout(()=>form.remove(),3000);
 
-  showToast('접수 완료! 세부 입력으로 이동합니다...','#016B49');
+  showToast('접수 완료!','#016B49');
 
+  // 완료 화면 표시 (detail.html로 자동 이동하지 않음)
+  document.getElementById('s3').style.display='none';
+  document.getElementById('s4').style.display='block';
+  setProg(100);
+  setTimeout(()=>scrollTo({top:document.getElementById('s4').offsetTop,behavior:'smooth'}),300);
+}
+
+// ── 선택형 추가 정보 전송 ──
+function submitExtra(){
+  const qPension=document.querySelector('input[name="q_pension"]:checked')?.value||'';
+  const qRetire=document.querySelector('input[name="q_retire"]:checked')?.value||'';
+  const qRisk=document.querySelector('input[name="q_risk"]:checked')?.value||'';
+  if(!qPension&&!qRetire&&!qRisk){showToast('하나 이상 선택해주세요','#D35400');return}
+
+  const name=document.getElementById('cName').value.trim();
+  const phone=document.getElementById('cPhone').value.trim();
+  const extra={
+    action:'save_client',secretKey:SECRET_KEY,
+    timestamp:new Date().toLocaleString('ko-KR'),
+    name:str(name),phone:str(phone)||'없음',email:str(document.getElementById('cEmail').value.trim())||'없음',
+    memo:'[추가입력] 국민연금:'+qPension+' / 퇴직연금:'+qRetire+' / 투자성향:'+qRisk,
+    riskLevel:qRisk,
+    source:'간이진단_추가입력',
+    referrer:str(referrer),sendEmail:'profinitart@gmail.com'
+  };
+
+  const old=document.getElementById('_sif2');if(old)old.remove();
+  const iframe=document.createElement('iframe');
+  iframe.id='_sif2';iframe.name='_sif2';iframe.style.display='none';
+  document.body.appendChild(iframe);
+  const form=document.createElement('form');
+  form.method='POST';form.action=SHEET_URL;form.target='_sif2';form.style.display='none';
+  const inp=document.createElement('input');
+  inp.type='hidden';inp.name='data';inp.value=JSON.stringify(extra);
+  form.appendChild(inp);document.body.appendChild(form);form.submit();
+  setTimeout(()=>form.remove(),3000);
+
+  document.getElementById('btnExtra').textContent='전송 완료!';
+  document.getElementById('btnExtra').style.background='var(--green)';
+  document.getElementById('btnExtra').disabled=true;
+  document.getElementById('extraStatus').textContent='감사합니다. 더 정확한 준비가 가능해졌습니다.';
+}
+
+// ── detail.html로 이동 ──
+function goToDetail(){
+  const name=document.getElementById('cName').value.trim();
+  const phone=document.getElementById('cPhone').value.trim();
+  const email=document.getElementById('cEmail').value.trim();
   const params=new URLSearchParams({
-    name,phone,email,consultDateTime,
+    name,phone,email,
     age:num(D.age),income:num(D.income),target:num(D.target),
     gender:str(D.gender),gap:num(C.gap),crev:num(C.crevYears),
     pension:num(C.estPension),ontrack:C.onTrack?'1':'0',
     depAge:str(C.depAge),ref:str(referrer),
   });
-  setProg(100);
-  setTimeout(()=>{window.location.href='detail.html?'+params.toString()},1500);
+  window.location.href='detail.html?'+params.toString();
 }
 </script>
 </body>

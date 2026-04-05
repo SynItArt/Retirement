@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>추천 링크 & 데이터 흐름 가이드 — AFPK 신대식</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+:root{
+  --navy:#0B1D35;--sky:#2D6BE4;--gold:#F5A623;
+  --green:#016B49;--mint:#00A878;--red:#C0392B;--orange:#D35400;
+  --bg:#F5F7FB;--card:#fff;--text:#0B1D35;--sub:#4A6382;--muted:#8898AB;--border:#D8E0EC;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.7}
+
+.hero{background:linear-gradient(155deg,#060F1E,#0F2744,#152A4A);
+  padding:48px 20px 40px;text-align:center;color:#fff}
+.hero-badge{display:inline-block;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);
+  border-radius:999px;padding:5px 16px;font-size:12px;font-weight:900;color:var(--gold);margin-bottom:16px}
+.hero h1{font-size:clamp(24px,6vw,36px);font-weight:900;line-height:1.3;margin-bottom:10px}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero p{font-size:15px;color:#7B9CC0;font-weight:600;max-width:500px;margin:0 auto}
+
+.wrap{max-width:640px;margin:0 auto;padding:28px 16px 60px}
+
+.chapter{margin-bottom:32px}
+.ch-num{display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;
+  font-size:14px;font-weight:900;margin-right:8px;vertical-align:middle}
+.ch-title{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:14px}
+
+.card{background:var(--card);border-radius:16px;padding:22px 24px;
+  border:1px solid var(--border);margin-bottom:14px;
+  box-shadow:0 2px 12px rgba(11,29,53,.06)}
+
+.flow{display:flex;flex-direction:column;gap:0}
+.flow-step{display:flex;gap:14px;position:relative;padding-bottom:20px}
+.flow-step:last-child{padding-bottom:0}
+.flow-step:not(:last-child)::after{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--border)}
+.fs-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;color:#fff;flex-shrink:0;position:relative;z-index:1}
+.fs-body{flex:1}
+.fs-title{font-size:15px;font-weight:900;color:var(--navy);margin-bottom:3px}
+.fs-desc{font-size:14px;color:var(--sub);font-weight:600;line-height:1.7}
+
+.url-box{background:#F0F4FA;border:1.5px solid var(--border);border-radius:10px;
+  padding:14px 16px;font-family:'Courier New',monospace;font-size:13px;
+  color:var(--text);line-height:1.8;word-break:break-all;margin:10px 0}
+.url-box .hl{color:var(--orange);font-weight:900}
+
+.tip{background:#FFF8E7;border:1.5px solid #F0DDA0;border-radius:12px;
+  padding:14px 16px;font-size:14px;color:#6B4D00;font-weight:700;line-height:1.7;margin:10px 0}
+
+.warn{background:#FEF0F0;border:1.5px solid #F0B0B0;border-radius:12px;
+  padding:14px 16px;font-size:14px;color:#7A1818;font-weight:700;line-height:1.7;margin:10px 0}
+
+.good{background:#EEFAF4;border:1.5px solid #A0DFC0;border-radius:12px;
+  padding:14px 16px;font-size:14px;color:#014D34;font-weight:700;line-height:1.7;margin:10px 0}
+
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.cmp-card{border-radius:12px;padding:16px;text-align:center}
+.cmp-l{background:#EEFAF4;border:1.5px solid #A0DFC0}
+.cmp-r{background:#FFF8E7;border:1.5px solid #F0DDA0}
+.cmp-title{font-size:13px;font-weight:900;margin-bottom:6px}
+.cmp-l .cmp-title{color:#014D34}
+.cmp-r .cmp-title{color:#6B4D00}
+.cmp-body{font-size:12px;font-weight:600;line-height:1.7}
+.cmp-l .cmp-body{color:#016B49}
+.cmp-r .cmp-body{color:#7A5500}
+
+.example{background:#F0F4FA;border-radius:12px;padding:16px 18px;margin:10px 0}
+.ex-title{font-size:13px;font-weight:900;color:var(--sky);margin-bottom:8px}
+.ex-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px}
+.ex-row:last-child{border-bottom:none}
+.ex-k{color:var(--sub);font-weight:700}
+.ex-v{font-weight:900;color:var(--navy)}
+
+.emoji-list{list-style:none;padding:0}
+.emoji-list li{padding:6px 0;font-size:14px;font-weight:700;color:var(--sub);
+  display:flex;gap:8px;align-items:flex-start;line-height:1.6}
+.emoji-list li strong{color:var(--navy)}
+
+.divider{height:1px;background:var(--border);margin:24px 0}
+
+footer{background:var(--navy);color:#3A5068;text-align:center;
+  padding:20px 16px;font-size:11px;font-weight:600;line-height:2}
+
+@media(max-width:480px){.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Queen & King 가이드</div>
+  <h1>추천 링크 사용법 &<br><em>데이터가 어떻게 흘러가는지</em></h1>
+  <p>내가 보낸 링크로 누가 들어왔는지, 어떤 데이터가 쌓이는지, 한눈에 이해하는 가이드</p>
+</div>
+
+<div class="wrap">
+
+<!-- ════ Chapter 1 ════ -->
+<div class="chapter">
+  <div class="ch-title"><span class="ch-num">1</span>내 추천 링크 만들기</div>
+
+  <div class="card">
+    <div style="font-size:15px;font-weight:900;color:var(--navy);margin-bottom:10px">기본 링크에 내 이름만 붙이면 끝!</div>
+
+    <div class="url-box">
+      기본 링크:<br>
+      https://SynItArt.github.io/Retirement/<br><br>
+      내 추천 링크 (예시):<br>
+      https://SynItArt.github.io/Retirement/<span class="hl">?ref=김영희</span><br><br>
+      코드 방식:<br>
+      https://SynItArt.github.io/Retirement/<span class="hl">?ref=Q001</span>
+    </div>
+
+    <div class="tip">
+      <strong>만드는 법:</strong> 기본 링크 뒤에 <strong>?ref=내이름</strong>만 붙이면 됩니다.<br>
+      한글 이름, 영어, 코드 아무거나 가능해요.
+    </div>
+
+    <div class="good">
+      <strong>핵심:</strong> 이 링크를 받은 사람은 추천인 입력란 같은 걸 따로 채울 필요가 없어요.<br>
+      링크 안에 이미 "누가 보냈는지"가 들어 있으니까요.
+    </div>
+  </div>
+</div>
+
+<!-- ════ Chapter 2 ════ -->
+<div class="chapter">
+  <div class="ch-title"><span class="ch-num">2</span>상대방이 경험하는 흐름</div>
+
+  <div class="card">
+    <div style="font-size:14px;font-weight:700;color:var(--muted);margin-bottom:14px">
+      내가 보낸 링크를 상대가 클릭하면 어떤 일이 일어나는지
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--sky)">1</div>
+        <div class="fs-body">
+          <div class="fs-title">링크 클릭</div>
+          <div class="fs-desc">카톡에서 내가 보낸 링크를 탭합니다.<br>
+          <strong>상대방 화면에는 아무 차이도 없어요.</strong> 일반 페이지와 똑같아 보입니다.</div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--gold)">2</div>
+        <div class="fs-body">
+          <div class="fs-title">슬라이더로 진단</div>
+          <div class="fs-desc">나이·소득·목표 생활비를 슬라이더로 입력하고 "내 연금 확인하기" 클릭.<br>
+          <strong>개인정보 입력 없이</strong> 바로 결과가 나옵니다.</div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--orange)">3</div>
+        <div class="fs-body">
+          <div class="fs-title">결과 확인 → 충격</div>
+          <div class="fs-desc">월 부족액, 소득 크레바스, 자산 소진 나이가 나옵니다.<br>
+          대부분 여기서 <strong>"이걸 어떻게 해야 하지?"</strong>라는 생각이 듭니다.</div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--green)">4</div>
+        <div class="fs-body">
+          <div class="fs-title">"정리해보기" 제출</div>
+          <div class="fs-desc">이름·연락처·희망 연락 방법을 입력하고 제출합니다.<br>
+          <strong>이 순간, 내 이름(추천인)이 자동으로 같이 전송됩니다.</strong></div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--navy)">5</div>
+        <div class="fs-body">
+          <div class="fs-title">AFPK 신대식이 연락</div>
+          <div class="fs-desc">접수 즉시 이메일 알림이 가고, 희망한 방법(카톡/문자 등)으로 연락드립니다.<br>
+          이메일에 <strong>"추천: 김영희"</strong>가 표시되어 있어서 바로 알 수 있어요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ Chapter 3 ════ -->
+<div class="chapter">
+  <div class="ch-title"><span class="ch-num">3</span>데이터는 어디에 쌓이나</div>
+
+  <div class="card">
+    <div style="font-size:15px;font-weight:900;color:var(--navy);margin-bottom:12px">구글 시트에 자동 저장</div>
+
+    <div class="example">
+      <div class="ex-title">시트에 저장되는 정보 (예시)</div>
+      <div class="ex-row"><span class="ex-k">접수시각</span><span class="ex-v">2026.4.5 오후 2:30</span></div>
+      <div class="ex-row"><span class="ex-k">이름</span><span class="ex-v">박미경</span></div>
+      <div class="ex-row"><span class="ex-k">전화</span><span class="ex-v">010-1234-5678</span></div>
+      <div class="ex-row"><span class="ex-k">추천인</span><span class="ex-v" style="color:var(--orange)">김영희</span></div>
+      <div class="ex-row"><span class="ex-k">희망연락</span><span class="ex-v" style="color:var(--orange)">카톡</span></div>
+      <div class="ex-row"><span class="ex-k">월소득</span><span class="ex-v">400만원</span></div>
+      <div class="ex-row"><span class="ex-k">월 갭</span><span class="ex-v" style="color:var(--red)">-192만원</span></div>
+      <div class="ex-row"><span class="ex-k">크레바스</span><span class="ex-v" style="color:var(--red)">3년</span></div>
+    </div>
+
+    <div class="compare">
+      <div class="cmp-card cmp-l">
+        <div class="cmp-title">추천 링크로 들어온 경우</div>
+        <div class="cmp-body">추천인 칸에 <strong>"김영희"</strong> 기록<br>이메일 제목에 "추천: 김영희" 표시</div>
+      </div>
+      <div class="cmp-card cmp-r">
+        <div class="cmp-title">그냥 들어온 경우</div>
+        <div class="cmp-body">추천인 칸 비어있음<br>이메일에 "직접 유입" 표시</div>
+      </div>
+    </div>
+
+    <div class="tip">
+      추천인 칸은 <strong>시트의 앞쪽(E열)</strong>에 있어서, 시트를 열자마자 바로 보여요.<br>
+      "이 사람은 누가 보냈는지" 1초 만에 확인 가능합니다.
+    </div>
+  </div>
+</div>
+
+<!-- ════ Chapter 4 ════ -->
+<div class="chapter">
+  <div class="ch-title"><span class="ch-num">4</span>이메일 알림은 이렇게 옵니다</div>
+
+  <div class="card">
+    <div style="font-size:15px;font-weight:900;color:var(--navy);margin-bottom:12px">접수 즉시 AFPK에게 이메일이 갑니다</div>
+
+    <div class="example" style="background:#0B1D35;border-radius:12px;padding:16px 18px;color:#fff">
+      <div style="font-size:12px;color:#5C7A99;margin-bottom:4px">이메일 제목</div>
+      <div style="font-size:16px;font-weight:900;margin-bottom:12px">
+        [간이진단] 박미경님 (48세) · 추천: <span style="color:var(--gold)">김영희</span>
+      </div>
+      <div style="font-size:12px;color:#5C7A99;margin-bottom:4px">이메일 내용 (요약)</div>
+      <div style="font-size:13px;color:#94B4D4;line-height:1.8">
+        이름: 박미경 / 48세 / 여<br>
+        연락처: 010-1234-5678<br>
+        <span style="color:var(--gold);font-weight:900">희망연락: 카톡 · 오후</span><br>
+        <span style="color:var(--gold);font-weight:900">추천인: 김영희</span><br>
+        ──────<br>
+        월소득: 400만원 / 목표: 280만원<br>
+        월갭: -192만원 / 크레바스: 3년<br>
+        <span style="color:var(--red);font-weight:900">위험 — 자산 소진 예상 72세</span>
+      </div>
+    </div>
+
+    <div class="good">
+      이메일 하나로 <strong>누가 보냈는지 + 어떻게 연락할지 + 핵심 수치</strong>가 다 보여서,<br>
+      받자마자 바로 연락할 수 있어요.
+    </div>
+  </div>
+</div>
+
+<!-- ════ Chapter 5 ════ -->
+<div class="chapter">
+  <div class="ch-title"><span class="ch-num">5</span>이렇게 공유하세요</div>
+
+  <div class="card">
+    <div style="font-size:15px;font-weight:900;color:var(--navy);margin-bottom:6px">나는 "먼저 해본 사람"입니다</div>
+    <div style="font-size:13px;color:var(--sub);font-weight:600;margin-bottom:14px">
+      전문가 역할이 아니라, 먼저 경험하고 공유하는 지인. 그게 가장 강력합니다.
+    </div>
+
+    <ul class="emoji-list">
+      <li>
+        <span style="flex-shrink:0;font-size:18px">1.</span>
+        <span><strong>카톡으로 1:1 보낼 때</strong><br>
+        "나도 해봤는데 좀 놀랐어. 이름 안 넣어도 돼, 한번 해봐" + 링크</span>
+      </li>
+      <li>
+        <span style="flex-shrink:0;font-size:18px">2.</span>
+        <span><strong>단체 채팅방에 올릴 때</strong><br>
+        "요즘 연금 얼마 나오는지 궁금해서 해봤는데, 결과 보고 깜짝 놀랐어요" + 링크</span>
+      </li>
+      <li>
+        <span style="flex-shrink:0;font-size:18px">3.</span>
+        <span><strong>상대가 관심을 보이면</strong><br>
+        "나도 여기서 내 연금 확인했어. 궁금하면 연락처 남겨봐, 연락 온다더라"</span>
+      </li>
+      <li>
+        <span style="flex-shrink:0;font-size:18px">4.</span>
+        <span><strong>결과가 충격적이었다고 하면</strong><br>
+        "나도 처음에 그랬어. 근데 정리하니까 방법이 보이더라"</span>
+      </li>
+    </ul>
+
+    <div class="tip">
+      <strong>포인트:</strong> "한번 해봐"가 가장 강력한 한 마디예요.<br>
+      설명하려 하지 말고, 직접 해보게 하세요. 결과가 알아서 말해줍니다.
+    </div>
+  </div>
+</div>
+
+<!-- ════ Chapter 6 ════ -->
+<div class="chapter">
+  <div class="ch-title"><span class="ch-num">6</span>전체 흐름 한 장 정리</div>
+
+  <div class="card" style="padding:24px">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--sky)">나</div>
+        <div class="fs-body">
+          <div class="fs-title">추천 링크 생성 & 공유</div>
+          <div class="fs-desc">기본URL + ?ref=내이름 → 카톡으로 전달</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--gold)">지인</div>
+        <div class="fs-body">
+          <div class="fs-title">링크 클릭 → 진단 → 접수</div>
+          <div class="fs-desc">슬라이더 조작 → 결과 확인 → 연락처 입력 → "정리해보기"</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--green)">시트</div>
+        <div class="fs-body">
+          <div class="fs-title">구글 시트에 자동 저장</div>
+          <div class="fs-desc">이름·연락처·진단결과 + <strong>추천인(나)</strong> + 희망연락방법</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--orange)">메일</div>
+        <div class="fs-body">
+          <div class="fs-title">AFPK에게 알림 이메일</div>
+          <div class="fs-desc">접수 즉시 → 고객정보 + 핵심수치 + <strong>추천: 내이름</strong></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot" style="background:var(--navy)">AFPK</div>
+        <div class="fs-body">
+          <div class="fs-title">고객에게 연락 → 같이 정리</div>
+          <div class="fs-desc">희망 방법(카톡/문자)으로 연락 → 연금 현황 함께 파악 → 정리</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div style="text-align:center;padding:20px 0">
+  <div style="font-size:18px;font-weight:900;color:var(--navy);margin-bottom:8px">궁금한 점이 있으면</div>
+  <div style="font-size:14px;color:var(--sub);font-weight:600">AFPK 신대식에게 카톡이나 문자로 물어보세요</div>
+</div>
+
+</div>
+
+<footer>
+  AFPK 신대식 · 투자권유대행인 24-015461 · 퇴직연금모집인 제L24122600078호
+</footer>
+
+</body>
+</html>
